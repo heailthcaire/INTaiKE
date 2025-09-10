@@ -358,12 +358,16 @@ input:focus, select:focus, textarea:focus {
   max-height: 360px;
   overflow: auto;
   white-space: pre;
+ color: var(--panel);
+
 }
 
 .table-preview table {
   width: 100%;
   border-collapse: collapse;
   font-size: .7rem;
+ color: var(--panel);
+
 }
 
 .table-preview th,
@@ -372,6 +376,8 @@ input:focus, select:focus, textarea:focus {
   text-align: left;
   border-bottom: 1px solid #1d2a3b;
   vertical-align: top;
+ color: var(--panel);
+
 }
 
 .table-preview th {
@@ -380,6 +386,8 @@ input:focus, select:focus, textarea:focus {
   position: sticky;
   top: 0;
   z-index: 2;
+ color: var(--panel);
+
 }
 
 .hidden { display: none !important; }
