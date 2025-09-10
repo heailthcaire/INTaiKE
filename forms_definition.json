@@ -1,0 +1,184 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2025-09-09T15:00:00Z",
+  "forms": [
+    {
+      "id": "patient_identity",
+      "name": "Patient Identity & Administrative",
+      "fields": [
+        { "id": "mrn", "label": "MRN (Medical Record Number)", "type": "text", "required": false, "readonly": true, "fhir": "Patient.identifier", "hint": "Auto-populated if existing patient match." },
+        { "id": "firstName", "label": "First Name", "type": "text", "required": true, "fhir": "Patient.name.given" },
+        { "id": "middleName", "label": "Middle Name / Initial", "type": "text", "required": false, "fhir": "Patient.name.given" },
+        { "id": "lastName", "label": "Last Name", "type": "text", "required": true, "fhir": "Patient.name.family" },
+        { "id": "preferredName", "label": "Preferred Name", "type": "text", "required": false, "fhir": "Patient.name.text" },
+        { "id": "maidenName", "label": "Previous / Maiden Name", "type": "text", "required": false, "fhir": "Patient.name" },
+        { "id": "birthDate", "label": "Date of Birth", "type": "date", "required": true, "fhir": "Patient.birthDate" },
+        { "id": "sexAtBirth", "label": "Sex Assigned at Birth", "type": "enum", "required": true, "options": ["male","female","intersex","unknown"], "fhir": "Patient.extension" },
+        { "id": "genderIdentity", "label": "Gender Identity", "type": "enum", "required": false, "options": ["male","female","non-binary","transgender","other","prefer-not"], "fhir": "Patient.gender" },
+        { "id": "pronouns", "label": "Pronouns", "type": "enum", "required": false, "options": ["he/him","she/her","they/them","other"], "fhir": "Patient.extension" },
+        { "id": "primaryLanguage", "label": "Primary Language", "type": "enum", "required": true, "options": ["en","es","fr","zh","ar","other"], "fhir": "Patient.communication.language" },
+        { "id": "interpreterNeeded", "label": "Interpreter Needed", "type": "boolean", "required": false, "showIf": "primaryLanguage !== 'en'", "fhir": "Patient.communication.extension" }
+      ]
+    },
+    {
+      "id": "contact_address",
+      "name": "Contact & Address",
+      "fields": [
+        { "id": "mobilePhone", "label": "Mobile Phone", "type": "tel", "required": true, "fhir": "Patient.telecom" },
+        { "id": "altPhone", "label": "Alternate Phone", "type": "tel", "required": false, "fhir": "Patient.telecom" },
+        { "id": "email", "label": "Email", "type": "email", "required": false, "fhir": "Patient.telecom" },
+        { "id": "homelessFlag", "label": "Homeless / No Fixed Address", "type": "boolean", "required": false, "fhir": "Extension(Homelessness)" },
+        { "id": "street1", "label": "Street Address 1", "type": "text", "required": true, "showIf": "!homelessFlag", "fhir": "Patient.address.line" },
+        { "id": "street2", "label": "Street Address 2", "type": "text", "required": false, "showIf": "!homelessFlag", "fhir": "Patient.address.line" },
+        { "id": "city", "label": "City", "type": "text", "required": true, "showIf": "!homelessFlag", "fhir": "Patient.address.city" },
+        { "id": "state", "label": "State / Province", "type": "text", "required": true, "showIf": "!homelessFlag", "fhir": "Patient.address.state" },
+        { "id": "postalCode", "label": "Postal Code", "type": "text", "required": true, "showIf": "!homelessFlag", "fhir": "Patient.address.postalCode" },
+        { "id": "country", "label": "Country", "type": "text", "required": false, "showIf": "!homelessFlag", "fhir": "Patient.address.country" }
+      ]
+    },
+    {
+      "id": "demographics_social",
+      "name": "Demographics & Social Details",
+      "fields": [
+        { "id": "maritalStatus", "label": "Marital Status", "type": "enum", "required": false, "options": ["single","married","divorced","widowed","partner","other"], "fhir": "Patient.maritalStatus" },
+        { "id": "ethnicity", "label": "Ethnicity", "type": "enum", "required": false, "options": ["hispanic","non-hispanic","unknown","prefer-not"], "fhir": "Patient.extension" },
+        { "id": "race", "label": "Race", "type": "multiselect", "required": false, "options": ["white","black","asian","native-american","pacific-islander","other","unknown"], "fhir": "Patient.extension" },
+        { "id": "occupation", "label": "Occupation", "type": "text", "required": false, "fhir": "Observation" },
+        { "id": "veteranStatus", "label": "Veteran Status", "type": "boolean", "required": false, "fhir": "Patient.extension" }
+      ]
+    },
+    {
+      "id": "visit_presenting",
+      "name": "Visit / Presenting Problem",
+      "fields": [
+        { "id": "arrivalMode", "label": "Arrival Mode", "type": "enum", "required": true, "options": ["walk-in","ambulance","transfer"], "fhir": "Encounter.extension" },
+        { "id": "chiefComplaint", "label": "Chief Complaint (Lay Terms)", "type": "textarea", "required": true, "rows": 3, "fhir": "Encounter.reasonCode" },
+        { "id": "onsetDateTime", "label": "Onset Time / Date", "type": "datetime", "required": false, "fhir": "Condition.onset" },
+        { "id": "painScore", "label": "Pain Score (0-10)", "type": "number", "required": false, "hint": "Enter 0–10", "fhir": "Observation.valueInteger" },
+        { "id": "workRelated", "label": "Is This Work-Related?", "type": "boolean", "required": false, "fhir": "Claim.related" },
+        { "id": "injuryRelated", "label": "Is Injury Related?", "type": "boolean", "required": false, "fhir": "Condition.extension" },
+        { "id": "employerName", "label": "Employer Name", "type": "text", "required": false, "showIf": "workRelated === true", "fhir": "Claim.related" },
+        { "id": "injuryCause", "label": "Injury Cause", "type": "text", "required": false, "showIf": "injuryRelated === true", "fhir": "Condition.extension" }
+      ]
+    },
+    {
+      "id": "safety_screening",
+      "name": "Safety & Clinical Screening (basic)",
+      "fields": [
+        { "id": "allergiesKnownFlag", "label": "Allergies Known?", "type": "boolean", "required": true, "fhir": "AllergyIntolerance" },
+        { "id": "pregnant", "label": "Currently Pregnant?", "type": "enum", "required": false, "options": ["yes","no","unsure"], "showIf": "sexAtBirth === 'female' && age && age >= 12 && age <= 55", "fhir": "Observation" },
+        { "id": "recentTravel", "label": "Recent Travel (Last 30 Days)?", "type": "boolean", "required": false, "fhir": "Observation" },
+        { "id": "travelLocations", "label": "Travel Locations", "type": "textarea", "required": false, "rows": 2, "showIf": "recentTravel === true", "fhir": "Observation" },
+        { "id": "infectiousSymptoms", "label": "Infectious Symptoms", "type": "multiselect", "required": false, "options": ["fever","cough","rash","vomiting","diarrhea"], "fhir": "Observation" },
+        { "id": "violenceConcern", "label": "Violence / Safety Concerns", "type": "boolean", "required": false, "fhir": "RiskAssessment" }
+      ]
+    },
+    {
+      "id": "medical_history_snapshot",
+      "name": "Medical History Snapshot (optional at kiosk)",
+      "fields": [
+        { "id": "chronicConditions", "label": "Chronic Conditions", "type": "multiselect", "required": false, "options": ["diabetes","hypertension","asthma","copd","ckd","cad","heart-failure","other"], "fhir": "Condition" },
+        { "id": "pastSurgeries", "label": "Past Surgeries (Recent Major)", "type": "textarea", "required": false, "rows": 3, "fhir": "Procedure" },
+        { "id": "pcpName", "label": "Primary Care Physician Name", "type": "text", "required": false, "fhir": "PractitionerRole" },
+        { "id": "lastHospitalVisitDate", "label": "Last Hospital Visit Date", "type": "date", "required": false, "fhir": "Encounter" }
+      ]
+    },
+    {
+      "id": "meds_allergies",
+      "name": "Medications & Allergies (high-priority)",
+      "fields": [
+        { "id": "allergyList", "label": "Allergy List (comma separated)", "type": "textarea", "required": false, "rows": 2, "showIf": "allergiesKnownFlag === true", "fhir": "AllergyIntolerance" },
+        { "id": "currentMedications", "label": "Current Medications (name + dose, semicolon separated)", "type": "textarea", "required": false, "rows": 3, "fhir": "MedicationStatement" },
+        { "id": "lastCriticalDoseTime", "label": "Last Critical Medication Dose Time", "type": "datetime", "required": false, "fhir": "MedicationStatement.effective" }
+      ]
+    },
+    {
+      "id": "insurance_billing",
+      "name": "Insurance / Payer / Billing",
+      "fields": [
+        { "id": "payerType", "label": "Payer Type", "type": "enum", "required": true, "options": ["private","medicare","medicaid","self-pay","other"], "fhir": "Coverage.type" },
+        { "id": "insuranceProvider", "label": "Insurance Provider", "type": "text", "required": false, "showIf": "payerType !== 'self-pay'", "fhir": "Coverage.payor" },
+        { "id": "policyNumber", "label": "Policy / Member ID", "type": "text", "required": false, "showIf": "payerType !== 'self-pay'", "fhir": "Coverage.subscriberId" },
+        { "id": "groupNumber", "label": "Group Number", "type": "text", "required": false, "showIf": "payerType !== 'self-pay'", "fhir": "Coverage.group" },
+        { "id": "patientIsSubscriber", "label": "Patient is Subscriber", "type": "boolean", "required": false, "showIf": "payerType !== 'self-pay'" },
+        { "id": "subscriberName", "label": "Subscriber Name", "type": "text", "required": false, "showIf": "payerType !== 'self-pay' && patientIsSubscriber === false", "fhir": "Coverage.subscriber" },
+        { "id": "workersCompClaim", "label": "Workers Comp Claim #", "type": "text", "required": false, "showIf": "workRelated === true", "fhir": "Claim.identifier" },
+        { "id": "insuranceCardFront", "label": "Insurance Card Front Image", "type": "fileImage", "required": false, "showIf": "payerType !== 'self-pay'", "fhir": "Coverage.extension" },
+        { "id": "insuranceCardBack", "label": "Insurance Card Back Image", "type": "fileImage", "required": false, "showIf": "payerType !== 'self-pay'", "fhir": "Coverage.extension" }
+      ]
+    },
+    {
+      "id": "guarantor",
+      "name": "Guarantor / Responsible Party",
+      "fields": [
+        { "id": "guarantorNeeded", "label": "Guarantor Needed (Minor / Incapacitated)", "type": "boolean", "required": false },
+        { "id": "guarantorName", "label": "Guarantor Name", "type": "text", "required": false, "showIf": "guarantorNeeded === true", "fhir": "RelatedPerson.name" },
+        { "id": "guarantorRelationship", "label": "Relationship", "type": "enum", "required": false, "options": ["parent","guardian","spouse","other"], "showIf": "guarantorNeeded === true", "fhir": "RelatedPerson.relationship" },
+        { "id": "guarantorPhone", "label": "Guarantor Phone", "type": "tel", "required": false, "showIf": "guarantorNeeded === true", "fhir": "RelatedPerson.telecom" },
+        { "id": "guarantorAddrSame", "label": "Guarantor Address Same as Patient?", "type": "boolean", "required": false, "showIf": "guarantorNeeded === true" },
+        { "id": "guarantorAddress", "label": "Guarantor Address", "type": "textarea", "required": false, "rows": 2, "showIf": "guarantorNeeded === true && guarantorAddrSame === false", "fhir": "RelatedPerson.address" }
+      ]
+    },
+    {
+      "id": "emergency_contacts",
+      "name": "Emergency Contacts",
+      "fields": [
+        { "id": "emContactName", "label": "Contact Name", "type": "text", "required": false, "fhir": "Patient.contact.name" },
+        { "id": "emContactRelationship", "label": "Relationship", "type": "enum", "required": false, "options": ["spouse","parent","child","friend","other"], "showIf": "emContactName", "fhir": "Patient.contact.relationship" },
+        { "id": "emContactPhone", "label": "Phone (Primary)", "type": "tel", "required": false, "showIf": "emContactName", "fhir": "Patient.contact.telecom" },
+        { "id": "emContactPhone2", "label": "Secondary Phone", "type": "tel", "required": false, "showIf": "emContactName", "fhir": "Patient.contact.telecom" },
+        { "id": "emContactLanguage", "label": "Contact Preferred Language", "type": "enum", "required": false, "options": ["en","es","fr","other"], "showIf": "emContactName", "fhir": "Patient.contact.extension" }
+      ]
+    },
+    {
+      "id": "consent_legal",
+      "name": "Consent & Legal Acknowledgements",
+      "fields": [
+        { "id": "consentTreat", "label": "Consent to Treat (General)", "type": "boolean", "required": true, "mustBeTrue": true, "fhir": "Consent" },
+        { "id": "consentPrivacy", "label": "HIPAA / Privacy Acknowledgment", "type": "boolean", "required": true, "mustBeTrue": true, "fhir": "Consent" },
+        { "id": "consentFinancial", "label": "Financial Responsibility Agreement", "type": "boolean", "required": true, "mustBeTrue": true, "fhir": "Consent" },
+        { "id": "assignmentBenefits", "label": "Assignment of Benefits", "type": "boolean", "required": false, "showIf": "payerType && payerType !== 'self-pay'", "fhir": "Consent" },
+        { "id": "releaseInfo", "label": "Release of Information Authorization", "type": "boolean", "required": false, "fhir": "Consent" },
+        { "id": "advanceDirectiveOnFile", "label": "Advance Directive On File?", "type": "boolean", "required": false, "fhir": "DocumentReference" }
+      ]
+    },
+    {
+      "id": "accessibility_communication",
+      "name": "Accessibility & Communication Preferences",
+      "fields": [
+        { "id": "hearingImpairment", "label": "Hearing Impairment", "type": "boolean", "required": false, "fhir": "Patient.extension" },
+        { "id": "visionImpairment", "label": "Vision Impairment", "type": "boolean", "required": false, "fhir": "Patient.extension" },
+        { "id": "mobilityAssist", "label": "Mobility Assistance Needed", "type": "enum", "required": false, "options": ["none","wheelchair","cane","walker","other"], "fhir": "Observation" },
+        { "id": "preferredCommModes", "label": "Preferred Communication Mode(s)", "type": "multiselect", "required": false, "options": ["phone","sms","email","portal"], "fhir": "Patient.telecom.use" },
+        { "id": "assistiveDevice", "label": "Assistive Device (Interpreter / ASL)", "type": "multiselect", "required": false, "options": ["interpreter","asl","other"], "fhir": "ServiceRequest" }
+      ]
+    },
+    {
+      "id": "social_determinants",
+      "name": "Optional Social Determinants (if program supports)",
+      "fields": [
+        { "id": "housingStability", "label": "Housing Stability", "type": "enum", "required": false, "options": ["stable","unstable","homeless","prefer-not"], "fhir": "Observation" },
+        { "id": "foodInsecurity", "label": "Food Insecurity (Screen)", "type": "boolean", "required": false, "fhir": "Observation" },
+        { "id": "transportBarrier", "label": "Transportation Barrier to Care", "type": "boolean", "required": false, "fhir": "Observation" }
+      ]
+    },
+    {
+      "id": "attachments_media",
+      "name": "Attachments (ID, insurance card, advance directive)",
+      "fields": [
+        { "id": "patientPhoto", "label": "Photo of Patient (Identity)", "type": "fileImage", "required": false, "fhir": "Patient.photo" },
+        { "id": "govIdFront", "label": "Government ID Front", "type": "fileImage", "required": false, "fhir": "DocumentReference" },
+        { "id": "advanceDirectiveFile", "label": "Advance Directive / POLST", "type": "fileImage", "required": false, "showIf": "advanceDirectiveOnFile === true", "fhir": "DocumentReference" }
+      ]
+    },
+    {
+      "id": "digital_signatures_audit",
+      "name": "Digital Signatures / Audit Metadata",
+      "fields": [
+        { "id": "consentSignature", "label": "Consent Signature", "type": "signature", "required": true, "fhir": "Consent.signature" },
+        { "id": "kioskDeviceId", "label": "Kiosk Device ID", "type": "text", "required": false, "fhir": "Provenance" },
+        { "id": "schemaVersion", "label": "Data Schema Version", "type": "text", "required": false, "fhir": "Extension" }
+      ]
+    }
+  ]
+}

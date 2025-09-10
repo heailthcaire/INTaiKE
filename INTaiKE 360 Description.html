@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ED Intake Descriptions (Executive & Developer)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body {
+      font-family: system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:#0f1722;
+      color:#e8f0fa;
+      margin:0;
+      padding:2rem clamp(1rem,4vw,3rem);
+      line-height:1.45;
+    }
+    h1 {
+      margin-top:0;
+      font-size:clamp(1.4rem,2.3rem,2.4rem);
+      background:linear-gradient(90deg,#4f9dff,#7cb8ff);
+      -webkit-background-clip:text;
+      color:transparent;
+    }
+    h2 { margin-top:2.2rem; font-size:1rem; letter-spacing:.08em; text-transform:uppercase; opacity:.85;}
+    .card {
+      background:#1b2736;
+      border:1px solid #2c3e52;
+      border-radius:16px;
+      padding:1.25rem 1.4rem 1.4rem;
+      max-width:1200px;
+      margin:1.5rem 0;
+    }
+    .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:1rem;
+      margin:1.2rem 0 0;
+    }
+    button {
+      background:linear-gradient(135deg,#2d81ff,#4d6dff);
+      border:1px solid #2d6cff;
+      color:#fff;
+      padding:.85rem 1.35rem .9rem;
+      border-radius:14px;
+      font-size:.9rem;
+      cursor:pointer;
+      font-weight:600;
+      letter-spacing:.5px;
+      box-shadow:0 6px 20px -8px rgba(55,132,255,.55);
+      transition:.25s background,.25s transform;
+    }
+    button:hover { transform:translateY(-3px); }
+    button:active { transform:translateY(0); }
+    pre {
+      background:#111c29;
+      padding:1rem 1rem 1.1rem;
+      border:1px solid #263648;
+      border-radius:12px;
+      max-height:360px;
+      overflow:auto;
+      font-size:.72rem;
+    }
+    .footnote {
+      font-size:.7rem;
+      opacity:.65;
+      margin-top:2rem;
+    }
+    .tag {
+      display:inline-block;
+      font-size:.55rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      background:#203348;
+      padding:.25rem .5rem .3rem;
+      border-radius:6px;
+      margin-right:.4rem;
+      color:#9ec9ff;
+    }
+    a.inline {
+      color:#66b3ff;
+      text-decoration:none;
+    }
+    a.inline:hover { text-decoration:underline; }
+    .grid {
+      display:grid;
+      gap:1.2rem;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    }
+    ul { margin-top:.4rem; padding-left:1.05rem; }
+    li { margin:.25rem 0; }
+  </style>
+</head>
+<body>
+  <h1>ED / ER Intake Form – Executive & Developer Documentation</h1>
+  <p>This page lets you download two Word-compatible (RTF) documents: a concise executive summary and a detailed developer-oriented enhancement brief. RTF opens in Microsoft Word, Google Docs, LibreOffice, and macOS Pages.</p>
+
+  <div class="card">
+    <h2>Download Files</h2>
+    <div class="actions">
+      <button id="dlExec">Download Executive Summary (RTF)</button>
+      <button id="dlDev">Download Developer Enhancement Brief (RTF)</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Executive Summary (Preview)</h2>
+    <pre id="execPreview"></pre>
+  </div>
+
+  <div class="card">
+    <h2>Developer Enhancement Brief (Preview)</h2>
+    <pre id="devPreview"></pre>
+  </div>
+
+  <p class="footnote">Note: Content generated for demonstration. For production distribution, apply corporate branding, version control, document retention policies, and legal/compliance review.</p>
+
+  <script>
+    // -------- Document Text (Plain) --------
+    const executiveText = `
+Emergency Department Digital Intake – Executive Summary (Version 1.0)
+
+Overview
+A self-service digital intake (kiosk/tablet) solution streamlines Emergency Department (ED) registration by guiding patients through a structured, adaptive form. It reduces clerical bottlenecks, improves data quality, and accelerates time-to-triage while maintaining compliance readiness.
+
+Core Value
+1. Faster Throughput: Rapid capture of essentials (identity, chief complaint, consent) in under 90 seconds.
+2. Data Quality & Consistency: Standardized field set aligned with healthcare interoperability (FHIR-ready).
+3. Operational Efficiency: Frees registration staff to focus on exceptions and higher-value interactions.
+4. Risk & Compliance Support: Built-in prompts for consent, privacy acknowledgment, and safety indicators.
+5. Scalability: Modular architecture supports future integrations (EHR APIs, analytics, automation).
+
+What It Does Today
+- Multi-section dynamic forms with conditional field display.
+- Required field validation and structured JSON output.
+- Simple consent acknowledgment capture (expandable to digital signature).
+- Attachment placeholders (ID, insurance card, directives).
+- Separation of rapid vs. extended registration domains.
+
+Strategic Benefits
+- Provides a foundation for downstream automation (auto-creation of Patient + Encounter records).
+- Improves triage prioritization by early capture of chief complaint and risk signals.
+- Enables analytics (arrival patterns, completion rates, demographic trends).
+- Reduces duplicate records risk through structured identifiers roadmap.
+
+Planned / Recommended Enhancements
+- Patient matching (MPI or EHR API) + prefill.
+- FHIR Bundle publishing (Patient, Encounter, Coverage, Consent).
+- OCR / barcode ingestion (ID, insurance).
+- Real-time triage alerting for safety flags.
+- Localization & accessibility (WCAG 2.1 AA).
+- Security hardening (audit trail, encryption policies, role-based feature gating).
+
+Success Metrics (Illustrative)
+- 70%+ of arrivals self-completing initial section.
+- 30–50% reduction in manual data corrections.
+- < 2 min median intake for returning patients.
+- > 95% capture of chief complaint & consent.
+
+Summary
+This platform establishes a modern intake capability that is operationally lean, clinically supportive, integration-ready, and extensible for advanced automation in subsequent phases.
+    `.trim();
+
+    const developerText = `
+Emergency Department Digital Intake – Developer Enhancement Brief (Version 1.0)
+
+1. Purpose & Scope
+This document outlines the technical architecture, enhancement roadmap, integration targets, and quality/security considerations for the ED Intake Kiosk application. Current implementation: a client-side, JSON-driven dynamic form renderer generating structured section-level payloads.
+
+2. Current Architecture (Baseline Demo)
+- Front-End Stack: Vanilla HTML/CSS/JS (no framework) for portability and low load overhead.
+- Definition-Driven UI: forms_definition.txt (JSON) supplies:
+• Section metadata (id, name)
+• Field descriptors (type, label, required, conditional expression, FHIR mapping hint)
+- Dynamic Rendering: Each section is rendered on selection. Conditional visibility based on a simple expression evaluator using 'new Function' with a sandboxed data context.
+- State Management: In-memory object keyed by section id; not persisted beyond session.
+- Validation: Synchronous client-side required-field checks + visual highlighting + alert summary.
+- Output: JSON object: { formId, formName, timestamp, data {...} }
+- Signature Capture: Canvas-based (data URL). Extendable to hash-based integrity and cryptographic signing.
+- Attachments: Placeholder (name/size/type only). No binary persistence in demo.
+- Accessibility: Semantic labeling; further improvements needed (keyboard order, ARIA for dynamic visibility changes).
+
+3. Data Model & Mapping Strategy
+- Field-level FHIR hints included to support transformation into a transaction Bundle:
+Patient, Encounter, Coverage, Consent, DocumentReference, Observation, Condition, RiskAssessment, MedicationStatement, RelatedPerson.
+- Recommendation: Create a mapping layer (e.g., mapFields(formState) -> FHIRResource[]).
+- Consider building a 'resource registry' keyed by: { formFieldId: (state) => partialResourcePatch }
+
+4. Planned Enhancements (Backlog with Suggested Priority)
+Priority 1 (Foundational Integration)
+P1.1 Authentication & Session Binding (Anonymous → Provisional Encounter → Auth escalation)
+P1.2 Patient Lookup / MPI (Phone + DOB + Fuzzy Name) to prevent duplicates
+P1.3 FHIR Bundle Export (POST /FHIR) with retry & idempotency key
+P1.4 Centralized Validation Ruleset (schema + constraints + enumerations)
+P1.5 Improved Conditional Engine (safe parser instead of dynamic Function)
+
+Priority 2 (Clinical & Operational)
+P2.1 Real-time Triage Alert Channel (e.g., WebSocket publish when high-risk flags set)
+P2.2 Medication & Allergy Structured Search (RxNorm / SNOMED CT integration)
+P2.3 Multi-lingual i18n (resource bundles; lazy loaded)
+P2.4 OCR / Barcode Pipeline (worker thread or offline service): ID, insurance card, driver’s license PDF417
+P2.5 Audit & Provenance Logging (Immutable append-only log; correlate with user or kiosk device ID)
+
+Priority 3 (Experience & Analytics)
+P3.1 Analytics Layer (Completion time, abandonment funnel, field error frequency)
+P3.2 A/B Field Ordering Experiments
+P3.3 Theming / White-label Support
+P3.4 Resume Flow (Return via QR or temporary code)
+P3.5 Offline Tolerant Mode (Service Worker + queued submissions)
+
+Priority 4 (Security & Compliance)
+P4.1 PHI Data Minimization Flags (redact optional categories unless explicitly enabled)
+P4.2 Encryption at Rest (if local caching required; WebCrypto + symmetric sealed object)
+P4.3 Configurable Data Retention w/ Secure Purge
+P4.4 Consent Version Hashing + Signature Digest (SHA-256)
+P4.5 Role-Based Feature Flags (admin vs. kiosk vs. staff portal)
+
+5. Suggested Technical Stack Evolution
+Phase 1 (Current) – Vanilla; static hosting (serverless friendly).
+Phase 2 – Introduce a lightweight framework (React or Svelte) for maintainability; integrate state machine (XState) for deterministic flow.
+Phase 3 – Backend API (Node / FastAPI) for:
+• FHIR transformation & submission
+• Idempotent encounter creation
+• Secure attachment storage (object store w/ KMS)
+• Observability (OpenTelemetry traces, structured logs)
+Phase 4 – Event-Driven:
+• Publish intake-completed events to Kafka/NATS
+• Downstream enrichment (insurance eligibility check, risk stratification model)
+
+6. Data Quality & Validation Strategy
+- Implement JSON Schema per section; unify into master schema.
+- Provide enumerations centrally; avoid duplication inside forms_definition.
+- Add normalization pipeline (phone E.164, uppercase state codes, trim whitespace).
+- Introduce field-level provenance (who/what changed when) for audit resilience.
+
+7. Performance & UX Considerations
+- Target < 60KB gzipped initial load (keep offline bundling minimal).
+- Debounce expensive conditional re-computations (batch showIf evaluations).
+- Prewarm form definitions; lazy load large picklists (med list, condition list).
+- Device mode: large hit areas (>44px); high contrast; kiosk inactivity timeout (auto-reset after N minutes).
+
+8. Security & Privacy (Non-Exhaustive)
+Threat Vectors:
+• Shoulder-surfing → Add privacy mode (mask sensitive entries).
+• Walk-away abandonment → Auto clear timer.
+• Data exfiltration via console → Minimize logged PII.
+• Tampering with conditional logic → Immutable signed form-definition manifest (hash verification).
+Hardening:
+• CSP headers (no inline eval except controlled; replace dynamic Function approach).
+• Subresource Integrity for static assets.
+• Strict MIME type checks for attachments.
+
+9. Testing Strategy
+Test Layers:
+Unit: conditional visibility parser, validators.
+Integration: multi-section traversal, state retention.
+E2E: Cypress / Playwright flows (new vs. returning patient simulation).
+Load: synthetic concurrency against backend FHIR submission endpoint.
+Security: dependency scanning (SCA), dynamic application tests (DAST), signature injection tests.
+
+10. Observability & Metrics
+Metrics:
+• form_render_ms
+• section_submit_latency_ms
+• required_field_error_rate
+• abandonment_step_distribution
+• conditional_field_visibility_rate
+Logs (structured):
+{ ts, kioskId, formId, eventType, durationMs, flags: { risk:true } }
+Tracing:
+• Wrap FHIR submission & transformations with trace spans.
+
+11. Migration / Versioning
+- Maintain semantic version on forms_definition (version + lastUpdated).
+- Introduce delta manifest for safe hot-swaps (clients reload only changed segments).
+- Provide backward compatibility layer (map legacy field ids to new names).
+
+12. FHIR Transformation Outline (Example)
+Input: aggregated state across sections.
+Process:
+1. Build Patient (identifiers, telecom, address, demographics).
+2. Build Encounter (status=arrived, class=EMER).
+3. Build Observations (pain score, travel, SDOH).
+4. Build Coverage (payer info).
+5. Build Consent (treat, privacy, financial).
+6. Build DocumentReference (attachments).
+7. Bundle.type = transaction; each entry has conditional create/update.
+Validation:
+- Ensure no duplicate identifier collisions.
+- Add meta.profile when constraints apply.
+
+13. Roadmap Snapshot (Illustrative Timeline)
+Month 1–2: Authentication, MPI lookup, schema validation, FHIR create (MVP integration).
+Month 3–4: OCR pipeline, analytics instrumentation, multi-language.
+Month 5–6: Advanced consent cryptographic hashing, offline capability, event-driven enrichment.
+Month 7+: Predictive triage suggestions (ML), adaptive questioning.
+
+14. Open Questions
+- Will triage nurse override / append structured fields directly in same UI?
+- Central identity management or delegated to EHR vendor (e.g., Epic / Cerner APIs)?
+- Attachment virus scanning pipeline required?
+- Regional compliance customizations (GDPR mode, provincial rules)?
+
+15. Summary
+This platform is well-positioned to evolve into a standards-aligned, secure, analytics-aware intake layer. Strategic focus should prioritize interoperability, resilience, and clinically relevant automation while enforcing least-privilege data practices.
+
+Appendix A – Field Type Extension Ideas
+type: "codeableConcept" (with system, code, display)
+type: "phone" (auto-format E.164)
+type: "consentBlock" (group multiple mustBeTrue flags)
+type: "geoAddress" (with validation service integration)
+
+Appendix B – Risk Mitigation Matrix (Abbrev.)
+- Data mismatch → Add pre-submit summary review.
+- Over-collection → Configurable field suppression.
+- Signature repudiation → Add hashed signature envelope + timestamp authority.
+
+End of Document
+    `.trim();
+
+    // -------- RTF Wrapping Function --------
+    function toRTF(title, bodyText) {
+      // Basic escaping
+      const esc = (t) => t
+        .replace(/\\/g,'\\\\')
+        .replace(/{/g,'\\{')
+        .replace(/}/g,'\\}')
+        .replace(/\n\n+/g,'\\par \\par ')
+        .replace(/\n/g,'\\par ');
+      return `{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Arial;}}\\widowctrl
+{\\info{\\title ${esc(title)}}}
+\\fs28 \\b ${esc(title)} \\b0\\fs22\\par \\par
+${esc(bodyText)}
+}`;
+    }
+
+    const execRTF = toRTF("ED Intake – Executive Summary", executiveText);
+    const devRTF  = toRTF("ED Intake – Developer Enhancement Brief", developerText);
+
+    // Populate on-page previews (plain text)
+    document.getElementById('execPreview').textContent = executiveText;
+    document.getElementById('devPreview').textContent  = developerText;
+
+    function downloadRTF(filename, rtfContent) {
+      const blob = new Blob([rtfContent], { type: 'application/rtf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      requestAnimationFrame(()=> {
+        URL.revokeObjectURL(url);
+        a.remove();
+      });
+    }
+
+    document.getElementById('dlExec').addEventListener('click', () => {
+      downloadRTF('Executive_Summary_ED_Intake.rtf', execRTF);
+    });
+
+    document.getElementById('dlDev').addEventListener('click', () => {
+      downloadRTF('Developer_Enhancement_Brief_ED_Intake.rtf', devRTF);
+    });
+  </script>
+</body>
+</html>

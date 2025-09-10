@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>INTaiKE 360</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles_light.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="branding">
+      <h1>INTaiKE 360</h1>
+      <p class="tagline">Emergency Department Intake Registration</p>
+    </div>
+    <div class="form-selector-block">
+      <label for="formSelector" class="selector-label">Select Form</label>
+      <select id="formSelector" aria-label="Select form section"></select>
+      <button id="resetSection" type="button" class="ghost-btn" title="Reset Current Section">Reset Section</button>
+    </div>
+  </header>
+
+  <main class="main-area">
+    <aside class="info-panel">
+      <h2>Instructions</h2>
+      <ol>
+        <li>Choose a form section above.</li>
+        <li>Fill required fields (marked with <span class="req">*</span>).</li>
+        <li>Submit to preview the structured data.</li>
+      </ol>
+      <details>
+        <summary>About Conditional Fields</summary>
+        <p>Some fields appear only when conditions are met (e.g., pregnancy question appears only for applicable age range & sex assigned at birth).</p>
+      </details>
+      <details>
+        <summary>Disclaimer</summary>
+        <p>This demo does not transmit or store real PHI. All data stays in memory. For production: add authentication, encryption in transit & at rest, audit logging, consent versioning, and secure server-side integration (FHIR / HL7).</p>
+      </details>
+    </aside>
+
+    <section class="form-panel">
+      <form id="dynamicForm" novalidate>
+        <div id="fieldsContainer" class="fields-container" aria-live="polite"></div>
+
+        <div class="form-actions">
+          <button type="submit" id="submitBtn" class="primary-btn">Submit Section</button>
+          <button type="button" id="clearAllForms" class="ghost-btn">Clear All Data</button>
+        </div>
+      </form>
+
+      <section id="previewSection" class="preview hidden" aria-live="polite">
+        <div class="preview-header">
+          <h2>Submission Preview</h2>
+          <div class="preview-actions">
+            <button type="button" id="toggleView" class="ghost-btn small">Show Table View</button>
+            <button type="button" id="copyJsonBtn" class="ghost-btn small">Copy JSON</button>
+            <button type="button" id="downloadJsonBtn" class="ghost-btn small">Download JSON File</button>
+          </div>
+        </div>
+        <pre id="jsonPreview" class="json-preview"></pre>
+        <div id="tablePreview" class="table-preview hidden"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Built by HEaiLTHCaiRE Labs. &copy; 2025 HEaiLTHCaiRE.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
