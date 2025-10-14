@@ -129,7 +129,6 @@
           "type": "text",
           "required": false
         },
-        // Repeatable Section 1: Name(s) of Dependent(s) on PAI Policy
         {
           "id": "dependents_on_pai",
           "label": "Name(s) of Dependent(s) on PAI Policy",
