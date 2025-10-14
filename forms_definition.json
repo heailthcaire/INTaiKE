@@ -20,6 +20,210 @@
         { "id": "interpreterNeeded", "label": "Interpreter Needed", "type": "boolean", "required": false, "showIf": "primaryLanguage !== 'en'", "fhir": "Patient.communication.extension" }
       ]
     },
+        {
+      "id": "pai_cob_questionnaire",
+      "name": "PAI Coordination of Benefits Questionnaire",
+      "fields": [
+        {
+          "id": "employee_name",
+          "label": "Employee Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "employee_address",
+          "label": "Address",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "employee_city_state_zip",
+          "label": "City, State, Zip",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "employee_phone",
+          "label": "Phone",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "employer_name",
+          "label": "Employer Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "group_number",
+          "label": "Group Number",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "other_insurance",
+          "label": "Are you or any family member covered by other medical insurance?",
+          "type": "select",
+          "options": ["Yes", "No"],
+          "required": true
+        },
+        {
+          "id": "insurance_company_name",
+          "label": "Other Insurance Company Name",
+          "type": "text",
+          "required": false,
+          "hint": "If yes to other insurance"
+        },
+        {
+          "id": "insurance_address",
+          "label": "Other Insurance Address",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "insurance_phone",
+          "label": "Other Insurance Phone",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "policy_number",
+          "label": "Policy Number",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "effective_date",
+          "label": "Effective Date",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "policyholder_name",
+          "label": "Policyholder Name",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "policyholder_dob",
+          "label": "Policyholder DOB",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "relationship",
+          "label": "Relationship to Employee",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "medicare_covered",
+          "label": "Are you or any family member covered by Medicare?",
+          "type": "select",
+          "options": ["Yes", "No"],
+          "required": true
+        },
+        {
+          "id": "medicare_details",
+          "label": "Medicare Details (if yes)",
+          "type": "text",
+          "required": false
+        },
+        // Repeatable Section 1: Name(s) of Dependent(s) on PAI Policy
+        {
+          "id": "dependents_on_pai",
+          "label": "Name(s) of Dependent(s) on PAI Policy",
+          "type": "repeatable_group",
+          "hint": "Add entries with + button",
+          "subfields": [
+            {
+              "id": "dependent_name",
+              "label": "Dependent Name",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "dependent_dob",
+              "label": "Dependent DOB",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "dependent_relationship",
+              "label": "Relationship",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        // Repeatable Section 2: Dependents Age 19+ Eligible for Own Employer Insurance
+        {
+          "id": "dependents_over_19",
+          "label": "Please list any Dependent(s), AGE 19 AND OVER, who are eligible for their own employer sponsored medical health insurance.",
+          "type": "repeatable_group",
+          "hint": "Add entries with + button",
+          "subfields": [
+            {
+              "id": "dependent_name",
+              "label": "Dependent Name",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "dependent_age",
+              "label": "Age",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "employer_insurance_details",
+              "label": "Employer Insurance Details",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        // Repeatable Section 3: Who is covered by this other plan?
+        {
+          "id": "covered_by_other_plan",
+          "label": "Who is covered by this other plan? Include yourself if applicable.",
+          "type": "repeatable_group",
+          "hint": "Add entries with + button",
+          "subfields": [
+            {
+              "id": "covered_name",
+              "label": "Name",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "covered_relationship",
+              "label": "Relationship",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "covered_dob",
+              "label": "DOB",
+              "type": "date",
+              "required": false
+            }
+          ]
+        },
+        {
+          "id": "signature",
+          "label": "Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
     {
       "id": "contact_address",
       "name": "Contact & Address",
