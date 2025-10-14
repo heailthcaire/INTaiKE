@@ -275,6 +275,10 @@
   // NEW: Add a new entry to a repeatable group
 function addRepeatableEntry(groupId) {
   const state = ensureFormState(currentFormId);
+
+  // SAVE EXISTING VALUES FIRST before re-rendering
+  saveRepeatableGroupValues(groupId);
+
   if (!state[groupId]) state[groupId] = [];
   const newEntry = {};
   const field = getFieldDef(currentFormId, groupId);
@@ -285,9 +289,33 @@ function addRepeatableEntry(groupId) {
   updateConditionalVisibility();
 }
 
+  // NEW: Helper function to save repeatable group values from DOM
+function saveRepeatableGroupValues(groupId) {
+  const state = ensureFormState(currentFormId);
+  const field = getFieldDef(currentFormId, groupId);
+  const groupContainer = document.getElementById(groupId);
+  const entries = [];
+  
+  groupContainer.querySelectorAll('.repeatable-entry').forEach(entryWrap => {
+    const index = entryWrap.dataset.index;
+    const entry = {};
+    field.subfields.forEach(sub => {
+      const subEl = document.querySelector(`[name="${groupId}_${index}_${sub.id}"]`);
+      entry[sub.id] = subEl ? subEl.value : '';
+    });
+    entries.push(entry);
+  });
+  
+  state[groupId] = entries;
+}
+  
   // NEW: Remove an entry from a repeatable group
 function removeRepeatableEntry(groupId, index) {
   const state = ensureFormState(currentFormId);
+
+    // SAVE EXISTING VALUES FIRST
+  saveRepeatableGroupValues(groupId);
+ 
   if (state[groupId] && state[groupId][index]) {
     state[groupId].splice(index, 1);
     const field = getFieldDef(currentFormId, groupId);
