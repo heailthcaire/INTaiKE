@@ -156,7 +156,6 @@
             }
           ]
         },
-        // Repeatable Section 2: Dependents Age 19+ Eligible for Own Employer Insurance
         {
           "id": "dependents_over_19",
           "label": "Please list any Dependent(s), AGE 19 AND OVER, who are eligible for their own employer sponsored medical health insurance.",
@@ -183,7 +182,6 @@
             }
           ]
         },
-        // Repeatable Section 3: Who is covered by this other plan?
         {
           "id": "covered_by_other_plan",
           "label": "Who is covered by this other plan? Include yourself if applicable.",
