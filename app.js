@@ -169,17 +169,17 @@
           inputEl.id = field.id;
           wrap.appendChild(inputEl);
 
-          // Add + button
-          const addBtn = document.createElement('button');
-          addBtn.type = 'button';
-          addBtn.textContent = '+ Add Entry';
-          addBtn.className = 'add-entry-btn';
-          addBtn.addEventListener('click', () => addRepeatableEntry(field.id));
-          wrap.appendChild(addBtn);
+         // Add + button
+         const addBtn = document.createElement('button');
+         addBtn.type = 'button';
+         addBtn.textContent = '+ Add Entry';
+         addBtn.className = 'add-entry-btn';
+         addBtn.addEventListener('click', () => addRepeatableEntry(field.id));
+         wrap.appendChild(addBtn);
 
-          // Render existing entries
-          renderRepeatableEntries(field, state[field.id] || []);
-          break;
+         // Pass the container directly
+         renderRepeatableEntries(field, state[field.id] || [], inputEl);
+  break;
           
         default:
           inputEl = document.createElement('input');
@@ -222,8 +222,8 @@
   }
 
     // NEW: Function to render entries for a repeatable group
-  function renderRepeatableEntries(field, entries) {
-    const groupContainer = document.getElementById(field.id);
+  function renderRepeatableEntries(field, entries, groupContainer) {
+
     groupContainer.innerHTML = ''; // Clear existing
 
     entries.forEach((entry, index) => {
@@ -273,27 +273,29 @@
   }
 
   // NEW: Add a new entry to a repeatable group
-  function addRepeatableEntry(groupId) {
-    const state = ensureFormState(currentFormId);
-    if (!state[groupId]) state[groupId] = [];
-    const newEntry = {};
-    const field = getFieldDef(currentFormId, groupId);
-    field.subfields.forEach(sub => newEntry[sub.id] = '');
-    state[groupId].push(newEntry);
-    renderRepeatableEntries(field, state[groupId]);
-    updateConditionalVisibility();
-  }
+function addRepeatableEntry(groupId) {
+  const state = ensureFormState(currentFormId);
+  if (!state[groupId]) state[groupId] = [];
+  const newEntry = {};
+  const field = getFieldDef(currentFormId, groupId);
+  field.subfields.forEach(sub => newEntry[sub.id] = '');
+  state[groupId].push(newEntry);
+  const groupContainer = document.getElementById(groupId);
+  renderRepeatableEntries(field, state[groupId], groupContainer);
+  updateConditionalVisibility();
+}
 
   // NEW: Remove an entry from a repeatable group
-  function removeRepeatableEntry(groupId, index) {
-    const state = ensureFormState(currentFormId);
-    if (state[groupId] && state[groupId][index]) {
-      state[groupId].splice(index, 1);
-      const field = getFieldDef(currentFormId, groupId);
-      renderRepeatableEntries(field, state[groupId]);
-      updateConditionalVisibility();
-    }
+function removeRepeatableEntry(groupId, index) {
+  const state = ensureFormState(currentFormId);
+  if (state[groupId] && state[groupId][index]) {
+    state[groupId].splice(index, 1);
+    const field = getFieldDef(currentFormId, groupId);
+    const groupContainer = document.getElementById(groupId);
+    renderRepeatableEntries(field, state[groupId], groupContainer);
+    updateConditionalVisibility();
   }
+}
 
   function setupSignature(fieldId, canvas, clearBtn) {
     const ctx = canvas.getContext('2d');
