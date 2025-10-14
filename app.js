@@ -511,8 +511,8 @@
     def.fields.forEach(field => {
       const wrap = fieldsContainer.querySelector(`[data-field-id="${field.id}"]`);
       if (wrap && wrap.classList.contains('hidden')) return; // ignore hidden
+      let val = ensureFormState(currentFormId)[field.id];
       if (field.required) {
-        let val = ensureFormState(currentFormId)[field.id];
         if (field.type === 'boolean') {
           val = getBooleanValue(field.id);
           if (val === false && field.mustBeTrue) {
@@ -616,7 +616,7 @@
         return `${v.name} (${v.size} bytes)`;
       }
       const str = JSON.stringify(v);
-      if (str.length > 120) return str.slice(0,120) + '…';
+      if (str.length > 120) return str.slice(0,120) + '...';
       return str;
     }
     if (typeof v === 'string' && v.startsWith('data:image/png')) {
@@ -670,7 +670,7 @@
     if (!currentJSON) return;
     try {
       await navigator.clipboard.writeText(JSON.stringify(currentJSON, null, 2));
-      copyJsonBtn.textContent = 'Copied ✔';
+      copyJsonBtn.textContent = 'Copied!';
       setTimeout(()=> copyJsonBtn.textContent = 'Copy JSON', 1500);
     } catch (e) {
       alert('Copy failed.');
