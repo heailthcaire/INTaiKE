@@ -161,6 +161,26 @@
           // Setup signature pad
           setupSignature(field.id, canvas, clearBtn);
           break;
+
+        // NEW: Handle repeatable_group
+        case 'repeatable_group':
+          inputEl = document.createElement('div');
+          inputEl.className = 'repeatable-group';
+          inputEl.id = field.id;
+          wrap.appendChild(inputEl);
+
+          // Add + button
+          const addBtn = document.createElement('button');
+          addBtn.type = 'button';
+          addBtn.textContent = '+ Add Entry';
+          addBtn.className = 'add-entry-btn';
+          addBtn.addEventListener('click', () => addRepeatableEntry(field.id));
+          wrap.appendChild(addBtn);
+
+          // Render existing entries
+          renderRepeatableEntries(field, state[field.id] || []);
+          break;
+          
         default:
           inputEl = document.createElement('input');
           inputEl.type = 'text';
@@ -168,7 +188,7 @@
           break;
       }
 
-      if (field.type !== 'signature') {
+      if (field.type !== 'signature' && field.type !== 'repeatable_group') {
         wrap.appendChild(inputEl);
       }
 
@@ -182,8 +202,8 @@
 
       fieldsContainer.appendChild(wrap);
 
-      // Pre-fill value if exists
-      if (state[field.id] !== undefined) {
+     // Pre-fill value if exists (for non-repeatable)
+      if (state[field.id] !== undefined && field.type !== 'repeatable_group') {
         setFieldValue(field, state[field.id]);
       }
     });
@@ -198,6 +218,80 @@
     function onFieldChange() {
       fieldsContainer.addEventListener('input', handleDynamicChanges);
       fieldsContainer.addEventListener('change', handleDynamicChanges);
+    }
+  }
+
+    // NEW: Function to render entries for a repeatable group
+  function renderRepeatableEntries(field, entries) {
+    const groupContainer = document.getElementById(field.id);
+    groupContainer.innerHTML = ''; // Clear existing
+
+    entries.forEach((entry, index) => {
+      const entryWrap = document.createElement('div');
+      entryWrap.className = 'repeatable-entry';
+      entryWrap.dataset.index = index;
+
+      field.subfields.forEach(subfield => {
+        const subWrap = document.createElement('div');
+        subWrap.className = 'subfield';
+
+        const subLabel = document.createElement('label');
+        subLabel.textContent = subfield.label;
+        subWrap.appendChild(subLabel);
+
+        let subInput = null;
+        switch (subfield.type) {
+          case 'text':
+          case 'number':
+          case 'date':
+            subInput = document.createElement('input');
+            subInput.type = subfield.type;
+            subInput.name = `${field.id}_${index}_${subfield.id}`;
+            subInput.value = entry[subfield.id] || '';
+            if (subfield.required) subInput.required = true;
+            break;
+          // Add other subfield types as needed
+        }
+
+        if (subInput) {
+          subWrap.appendChild(subInput);
+        }
+
+        entryWrap.appendChild(subWrap);
+      });
+
+      // Add - button
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.textContent = '- Remove';
+      removeBtn.className = 'remove-entry-btn';
+      removeBtn.addEventListener('click', () => removeRepeatableEntry(field.id, index));
+      entryWrap.appendChild(removeBtn);
+
+      groupContainer.appendChild(entryWrap);
+    });
+  }
+
+  // NEW: Add a new entry to a repeatable group
+  function addRepeatableEntry(groupId) {
+    const state = ensureFormState(currentFormId);
+    if (!state[groupId]) state[groupId] = [];
+    const newEntry = {};
+    const field = getFieldDef(currentFormId, groupId);
+    field.subfields.forEach(sub => newEntry[sub.id] = '');
+    state[groupId].push(newEntry);
+    renderRepeatableEntries(field, state[groupId]);
+    updateConditionalVisibility();
+  }
+
+  // NEW: Remove an entry from a repeatable group
+  function removeRepeatableEntry(groupId, index) {
+    const state = ensureFormState(currentFormId);
+    if (state[groupId] && state[groupId][index]) {
+      state[groupId].splice(index, 1);
+      const field = getFieldDef(currentFormId, groupId);
+      renderRepeatableEntries(field, state[groupId]);
+      updateConditionalVisibility();
     }
   }
 
@@ -290,12 +384,27 @@
     updateConditionalVisibility();
   }
 
+  // UPDATED: Handle storing values for repeatable groups
   function storeFieldValue(fieldId) {
     const state = ensureFormState(currentFormId);
     const fieldDef = getFieldDef(currentFormId, fieldId);
     if (!fieldDef) return;
 
-    if (fieldDef.type === 'boolean') {
+    if (fieldDef.type === 'repeatable_group') {
+      // Collect all subfield values into array of objects
+      const groupContainer = document.getElementById(fieldId);
+      const entries = [];
+      groupContainer.querySelectorAll('.repeatable-entry').forEach(entryWrap => {
+        const index = entryWrap.dataset.index;
+        const entry = {};
+        fieldDef.subfields.forEach(sub => {
+          const subEl = document.querySelector(`[name="${fieldId}_${index}_${sub.id}"]`);
+          entry[sub.id] = subEl ? subEl.value : '';
+        });
+        entries.push(entry);
+      });
+      state[fieldId] = entries;
+    } else if (fieldDef.type === 'boolean') {
       state[fieldId] = getBooleanValue(fieldId);
     } else if (fieldDef.type === 'multiselect') {
       const el = document.getElementById(fieldId);
@@ -319,13 +428,19 @@
     }
   }
 
+
   function getFieldDef(formId, fieldId) {
     const def = getFormDef(formId);
     return def.fields.find(f => f.id === fieldId);
   }
 
+  // UPDATED: Set values for repeatable groups
   function setFieldValue(field, value) {
-    if (field.type === 'boolean') {
+    if (field.type === 'repeatable_group') {
+      const state = ensureFormState(currentFormId);
+      state[field.id] = value || [];
+      renderRepeatableEntries(field, state[field.id]);
+    } else if (field.type === 'boolean') {
       const cb = document.querySelector(`[name="${field.id}"]`);
       if (cb) cb.checked = !!value;
     } else if (field.type === 'multiselect') {
@@ -389,6 +504,7 @@
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   }
 
+  // UPDATED: Validate repeatable groups (e.g., check subfields if group is required)
   function validateForm() {
     const def = getFormDef(currentFormId);
     const missing = [];
@@ -402,7 +518,7 @@
           if (val === false && field.mustBeTrue) {
             missing.push(field.label + ' (must be accepted)');
           }
-        } else if (field.type === 'multiselect') {
+        } else if (field.type === 'multiselect' || field.type === 'repeatable_group') {
           if (!val || !val.length) missing.push(field.label);
         } else if (field.type === 'signature') {
           if (!val) missing.push(field.label);
@@ -411,6 +527,17 @@
             missing.push(field.label);
           }
         }
+      }
+
+      // NEW: Validate subfields in repeatable groups
+      if (field.type === 'repeatable_group') {
+        (val || []).forEach((entry, index) => {
+          field.subfields.forEach(sub => {
+            if (sub.required && (!entry[sub.id] || entry[sub.id] === '')) {
+              missing.push(`${field.label} Entry ${index + 1}: ${sub.label}`);
+            }
+          });
+        });
       }
     });
 
@@ -421,9 +548,11 @@
     fieldsContainer.querySelectorAll('.inline-error').forEach(el => el.remove());
 
     if (missing.length) {
-      // highlight fields
+      // highlight fields (including subfields)
       def.fields.forEach(field => {
-        if (missing.includes(field.label)) {
+        if (field.type === 'repeatable_group') {
+          // Highlight specific subfields if needed (simplified for brevity)
+        } else if (missing.includes(field.label)) {
           const el = document.getElementById(field.id);
           if (el) {
             el.classList.add('validation-error');
@@ -477,8 +606,11 @@
     tablePreview.innerHTML = html;
   }
 
+  // UPDATED: Handle repeatable groups in preview
   function formatValue(v) {
-    if (Array.isArray(v)) return v.join(', ');
+    if (Array.isArray(v)) {
+      return v.map(item => JSON.stringify(item)).join(', ');
+    }
     if (typeof v === 'object' && v !== null) {
       if (v.name && v.size) {
         return `${v.name} (${v.size} bytes)`;
