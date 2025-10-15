@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTaiKE 360 - System Context Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 1400px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #2d81ff;
+            margin-bottom: 10px;
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+            font-size: 18px;
+        }
+        .diagram {
+            position: relative;
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            grid-template-rows: auto auto auto auto;
+            gap: 30px;
+            align-items: center;
+        }
+        .actor {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .actor-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .center-platform {
+            grid-column: 2;
+            grid-row: 2 / 4;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border: 3px solid #2d81ff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(45, 129, 255, 0.3);
+        }
+        .platform-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d81ff;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+        .module-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .module {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .module-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .module-items {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.8;
+        }
+        .common-backend {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(67, 233, 123, 0.4);
+        }
+        .backend-items {
+            font-size: 13px;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+        .epic-system {
+            grid-column: 2;
+            grid-row: 4;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(250, 112, 154, 0.4);
+        }
+        .epic-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+        .epic-subtitle {
+            font-size: 14px;
+            color: white;
+            opacity: 0.9;
+        }
+        .database {
+            grid-column: 2;
+            grid-row: 5;
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(48, 207, 208, 0.4);
+        }
+        .database-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .database-items {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .arrow-down {
+            width: 4px;
+            height: 60px;
+            background: #2d81ff;
+            margin: 0 auto;
+            position: relative;
+            grid-column: 2;
+        }
+        .arrow-down::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 12px solid #2d81ff;
+        }
+        .arrow-side {
+            position: absolute;
+            height: 3px;
+            background: #2d81ff;
+        }
+        .arrow-left {
+            width: 150px;
+            top: 50%;
+            left: calc(300px + 15px);
+        }
+        .arrow-left::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-left: 12px solid #2d81ff;
+        }
+        .arrow-right {
+            width: 150px;
+            top: 50%;
+            right: calc(300px + 15px);
+        }
+        .arrow-right::after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 12px solid #2d81ff;
+        }
+        .label {
+            position: absolute;
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .protocol-label {
+            grid-column: 2;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>INTaiKE 360 ECOSYSTEM</h1>
+        <p class="subtitle">High-Level System Context Diagram</p>
+        
+        <div class="diagram">
+            <!-- Top row: Actors -->
+            <div class="actor" style="grid-column: 1; grid-row: 1;">
+                <div class="actor-icon">💻</div>
+                <div>Web Users</div>
+                <small>(Tablet/PC)</small>
+            </div>
+            
+            <div class="actor" style="grid-column: 3; grid-row: 1;">
+                <div class="actor-icon">📱</div>
+                <div>Voice Users</div>
+                <small>(Phone/Mobile)</small>
+            </div>
+
+            <!-- Connection labels -->
+            <div class="label" style="top: 180px; left: 380px;">HTTP</div>
+            <div class="label" style="top: 180px; right: 380px;">Voice Protocol</div>
+
+            <!-- Central Platform -->
+            <div class="center-platform">
+                <div class="platform-title">INTaiKE Server Platform</div>
+                
+                <div class="module-container">
+                    <div class="module">
+                        <div class="module-title">📝 Web Form Module</div>
+                        <div class="module-items">
+                            • UI rendering<br>
+                            • Client validation<br>
+                            • Dynamic forms<br>
+                            • app.js
+                        </div>
+                    </div>
+                    
+                    <div class="module">
+                        <div class="module-title">🎤 Voice Service Module</div>
+                        <div class="module-items">
+                            • Speech processing<br>
+                            • AI/NLP engine<br>
+                            • Voice recognition<br>
+                            • Conversational UI
+                        </div>
+                    </div>
+                </div>
+
+                <div class="common-backend">
+                    <div>🔧 COMMON BACKEND</div>
+                    <div class="backend-items">
+                        ✓ FHIR transformer<br>
+                        ✓ API client<br>
+                        ✓ Orchestration layer<br>
+                        ✓ Business logic
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrows from actors to platform -->
+            <div class="arrow-side arrow-left" style="grid-row: 2;"></div>
+            <div class="arrow-side arrow-right" style="grid-row: 2;"></div>
+
+            <!-- Arrow down to Epic -->
+            <div class="arrow-down" style="grid-row: 3;"></div>
+            <div class="protocol-label" style="grid-row: 3;">HTTPS / FHIR R4</div>
+
+            <!-- Epic FHIR API -->
+            <div class="epic-system">
+                <div class="epic-title">🏥 Epic FHIR API</div>
+                <div class="epic-subtitle">(HAPI Test Server)</div>
+                <div class="backend-items">
+                    https://hapi.fhir.org/baseR4<br>
+                    POST /Patient | /Coverage | /RelatedPerson
+                </div>
+            </div>
+
+            <!-- Arrow down to Database -->
+            <div class="arrow-down" style="grid-row: 5; height: 40px;"></div>
+
+            <!-- Epic Database -->
+            <div class="database">
+                <div class="database-title">💾 Epic EHR System</div>
+                <div class="database-items">
+                    • Patient records<br>
+                    • Coverage information<br>
+                    • Clinical data<br>
+                    • Audit logs<br>
+                    • Related persons
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 8px;">
+            <strong style="color: #856404;">🎯 Architecture Highlights:</strong>
+            <div style="font-size: 14px; color: #856404; margin-top: 10px; line-height: 1.8;">
+                ✓ Two input methods (Web + Voice) converge at single server platform<br>
+                ✓ Unified FHIR transformation ensures data consistency<br>
+                ✓ Modular architecture allows independent development of input methods<br>
+                ✓ Standard FHIR R4 compliance enables Epic integration<br>
+                ✓ Scalable design supports future input methods (mobile app, kiosk, etc.)
+            </div>
+        </div>
+    </div>
+</body>
+</html>

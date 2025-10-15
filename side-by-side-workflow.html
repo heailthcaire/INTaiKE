@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTaiKE 360 - Dual Intake Workflows</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 1200px;
+        }
+        h1 {
+            text-align: center;
+            color: #2d81ff;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+        .workflow-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        .workflow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .workflow-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .box {
+            width: 100%;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .user-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 16px;
+        }
+        .interface-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-size: 14px;
+        }
+        .json-box {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            font-size: 14px;
+            grid-column: 1 / -1;
+        }
+        .server-box {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            font-size: 14px;
+            grid-column: 1 / -1;
+        }
+        .api-box {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            font-size: 14px;
+            grid-column: 1 / -1;
+        }
+        .database-box {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            color: white;
+            font-size: 14px;
+            grid-column: 1 / -1;
+        }
+        .arrow {
+            width: 3px;
+            height: 25px;
+            background: #2d81ff;
+            margin: 0 auto;
+            position: relative;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid #2d81ff;
+        }
+        .label {
+            font-size: 11px;
+            color: #666;
+            margin: 5px 0;
+            font-style: italic;
+        }
+        .convergence {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+        }
+        .tech-stack {
+            font-size: 12px;
+            color: #333;
+            line-height: 1.6;
+        }
+        .shared-layer {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>INTaiKE 360: DUAL INTAKE ARCHITECTURE</h1>
+        <p class="subtitle">Two Input Methods → Unified FHIR Integration → Single Epic Database</p>
+        
+        <div class="workflow-container">
+            <!-- Workflow 1 -->
+            <div class="workflow">
+                <div class="workflow-title">WORKFLOW 1</div>
+                <div class="box user-box">USER<br>(Web Browser)</div>
+                <div class="arrow"></div>
+                <div class="label">types/clicks</div>
+                <div class="box interface-box">INTaiKE<br>Online Form<br><small>(app.js)</small></div>
+                <div class="arrow"></div>
+                <div class="label">generates</div>
+            </div>
+            
+            <!-- Workflow 2 -->
+            <div class="workflow">
+                <div class="workflow-title">WORKFLOW 2</div>
+                <div class="box user-box">USER<br>(Phone/Voice)</div>
+                <div class="arrow"></div>
+                <div class="label">speaks</div>
+                <div class="box interface-box">Vicki<br>Voice Service<br><small>(AI/NLP)</small></div>
+                <div class="arrow"></div>
+                <div class="label">generates</div>
+            </div>
+        </div>
+
+        <!-- Shared layers -->
+        <div class="shared-layer">
+            <div class="box json-box">
+                JSON RECORD<br>
+                <small>{ formId, timestamp, data: {...} }</small>
+            </div>
+            <div class="arrow"></div>
+            <div class="label">both POST to same endpoint</div>
+            
+            <div class="box server-box">
+                INTaiKE SERVER (Node.js)<br>
+                <small>• fhir-transformer.js • fhir-api.js • public-fhir-server.js</small>
+            </div>
+            <div class="arrow"></div>
+            <div class="label">transforms & POSTs FHIR resources</div>
+            
+            <div class="box api-box">
+                EPIC FHIR API<br>
+                <small>https://hapi.fhir.org/baseR4<br>POST /Patient | /Coverage | /RelatedPerson</small>
+            </div>
+            <div class="arrow"></div>
+            <div class="label">stores data</div>
+            
+            <div class="box database-box">
+                EPIC DATABASE<br>
+                <small>Patient Records • Coverage • Clinical Data</small>
+            </div>
+        </div>
+
+        <div class="convergence">
+            <strong>🔗 KEY CONVERGENCE POINT: INTaiKE Server</strong><br>
+            <div class="tech-stack">
+                Both workflows use identical backend processing:<br>
+                ✓ Same FHIR transformation logic<br>
+                ✓ Same API endpoints<br>
+                ✓ Same data validation<br>
+                ✓ Same Epic integration
+            </div>
+        </div>
+    </div>
+</body>
+</html>
